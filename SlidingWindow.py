@@ -3,8 +3,8 @@
 def slidingWindow(s: str, t: str) -> str:
     from collections import Counter
     need, window = Counter()
-    for char in t:
-         need[char] += 1
+    for c in t:
+         need[c] += 1
 
     # 窗口左右端点值，左闭右开
     left = right = 0
@@ -13,8 +13,8 @@ def slidingWindow(s: str, t: str) -> str:
     valid = 0
 
     while right < len(s):
-        # char 是将移入窗口的字符
-        char = s[right]
+        # c 是将移入窗口的字符
+        c = s[right]
         
         # 窗口向右拓展
         right += 1
@@ -28,8 +28,8 @@ def slidingWindow(s: str, t: str) -> str:
 
         # 满足条件的情况下窗口左端收缩
         while valid == len(need):
-            # char 是将移除窗口的字符
-            char = s[left]
+            # d 是将移除窗口的字符
+            d = s[left]
 
             # 窗口左端收缩
             left += 1
@@ -53,7 +53,7 @@ def minWindow(s: str, t: str) -> str:
     need, window = Counter(), Counter()
 
     # 初始化子串所涵盖的字符及数量
-    for char in t:
+    for c in t:
         need[char] += 1
     
     # 左右窗口值
@@ -67,15 +67,15 @@ def minWindow(s: str, t: str) -> str:
 
     while right < len(s):
         # 即将进入窗口的字符
-        char = s[right]
+        c = s[right]
         # 窗口向右拓展
         right += 1
         # 对于窗口内的数据进行更新
-        if char in need:
+        if c in need:
             # 子串所需字符标记+1
-            window[char] += 1
+            window[c] += 1
             # 如果已满足，valid += 1
-            if window[char] == need[char]:
+            if window[c] == need[c]:
                 valid += 1
 
         # 当已经满足覆盖了子串，窗口左端收缩，寻找最小覆盖子串
@@ -86,16 +86,16 @@ def minWindow(s: str, t: str) -> str:
                 length = right - left
 
             # 即将移出窗口的左端点值
-            char = s[left]
+            d = s[left]
             # 窗口左端收缩
             left += 1
             # 如果移出的是覆盖子串的字符
-            if char in need:
+            if d in need:
                 # 如果移出当前之后就不满足该字符覆盖，valid -= 1
-                if window[char] == need[char]:
+                if window[d] == need[d]:
                     valid -= 1
                 # 覆盖窗口的字符记录值-1
-                window[char] -= 1
+                window[d] -= 1
 
     if length == math.inf:
         return ""
@@ -139,12 +139,12 @@ def checkInclusion(s1: str, s2: str) -> bool:
             if valid == len(need):
                 return True
             
-            c = s2[left]
+            d = s2[left]
             left += 1
-            if c in need:
-                if window[c] == need[c]:
+            if d in need:
+                if window[d] == need[d]:
                     valid -= 1
-                window[c] -= 1
+                window[d] -= 1
     return False
 
 
@@ -201,10 +201,53 @@ def findAnagrams(s: str, p: str) -> List[int]:
             if valid == len(need):
                 result.append(left)
             
-            c = s[left]
+            d = s[left]
             left += 1
-            if c in need:
-                if window[c] == need[c]:
+            if d in need:
+                if window[d] == need[d]:
                     valid -= 1
-                window[c] -= 1
+                window[d] -= 1
+    return result
+
+
+"""
+3. 无重复字符的最长子串
+给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
+
+---------------------------------------------------------------
+输入: "abcabcbb"
+输出: 3 
+解释: 因为无重复字符的最长子串是 "abc"，所以其长度为 3。
+
+---------------------------------------------------------------
+输入: "bbbbb"
+输出: 1
+解释: 因为无重复字符的最长子串是 "b"，所以其长度为 1。
+
+---------------------------------------------------------------
+输入: "pwwkew"
+输出: 3
+解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
+     请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串。
+"""
+
+def lengthOfLongestSubstring(s: str) -> int:
+    from collections import Counter
+    window = Counter()
+    
+    left = right = 0
+    result = 0
+
+    while right < len(s):
+        c = s[right]
+        right += 1
+
+        window[c] += 1
+
+        while window[c] > 1:
+            d = s[left]
+            left += 1
+            window[d] -= 1
+
+        result = max(result, right-left)
     return result
