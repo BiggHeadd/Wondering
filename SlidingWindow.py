@@ -146,3 +146,65 @@ def checkInclusion(s1: str, s2: str) -> bool:
                     valid -= 1
                 window[c] -= 1
     return False
+
+
+"""
+438. 找到字符串中所有字母异位词
+给定一个字符串 s 和一个非空字符串 p，找到 s 中所有是 p 的字母异位词的子串，返回这些子串的起始索引。
+
+字符串只包含小写英文字母，并且字符串 s 和 p 的长度都不超过 20100。
+
+---------------------------------------------------------------
+输入:
+s: "cbaebabacd" p: "abc"
+
+输出:
+[0, 6]
+
+解释:
+起始索引等于 0 的子串是 "cba", 它是 "abc" 的字母异位词。
+起始索引等于 6 的子串是 "bac", 它是 "abc" 的字母异位词。
+
+---------------------------------------------------------------
+输入:
+s: "abab" p: "ab"
+
+输出:
+[0, 1, 2]
+
+解释:
+起始索引等于 0 的子串是 "ab", 它是 "ab" 的字母异位词。
+起始索引等于 1 的子串是 "ba", 它是 "ab" 的字母异位词。
+起始索引等于 2 的子串是 "ab", 它是 "ab" 的字母异位词。
+
+"""
+def findAnagrams(s: str, p: str) -> List[int]:
+    from collections import Counter
+    need, window = Counter(), Counter()
+
+    for c in p:
+        need[c] += 1
+
+    left = right = 0
+    valid = 0
+    result = []
+
+    while right < len(s):
+        c = s[right]
+        right += 1
+        if c in need:
+            window[c] += 1
+            if window[c] == need[c]:
+                valid += 1
+
+        while right - left >= len(p):
+            if valid == len(need):
+                result.append(left)
+            
+            c = s[left]
+            left += 1
+            if c in need:
+                if window[c] == need[c]:
+                    valid -= 1
+                window[c] -= 1
+    return result
