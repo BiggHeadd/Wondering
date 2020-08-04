@@ -146,3 +146,24 @@ def right_bound(nums: list, target: int) -> int:
         return -1
 ```
 
+
+
+# 回溯算法
+
+## BackTrack.py
+
+### 核心
+
+```python
+def back_track(roads, selections):
+    if condition:
+        result.append(selections)
+    
+    for road in roads:
+        if repeat or not satisfy:
+            continue
+        selections.append(road)
+        back_track(roads, selections)
+        selections.pop()
+```
+
